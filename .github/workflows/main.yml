@@ -82,7 +82,10 @@ jobs:
           echo "name=$NAME" >> $GITHUB_OUTPUT
 
       - name: Update kubeconfig
-        run: aws eks update-kubeconfig --region $AWS_REGION --name ${{ steps.cluster.outputs.name }}
+        run: |
+          aws eks update-kubeconfig \
+          --region ${{ AWS_REGION  }}  \
+          --name ${{ steps.cluster.outputs.name }}
 
       - name: Install NGINX Ingress Controller
         run: |
