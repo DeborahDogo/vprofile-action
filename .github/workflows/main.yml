@@ -77,15 +77,12 @@ jobs:
         id: cluster
         run: |
           NAME=$(aws eks list-clusters --region $AWS_REGION \
-                   --query "clusters[?starts_with(@, '${EKS_CLUSTER}')] | [0]" \
+                   --query "clusters[?starts_with(@, '$EKS_CLUSTER')] | [0]" \
                    --output text)
           echo "name=$NAME" >> $GITHUB_OUTPUT
 
       - name: Update kubeconfig
-        run: |
-          aws eks update-kubeconfig \
-          --region ${{ env.AWS_REGION }} \
-          --name ${{ env.EKS_CLUSTER }}
+        run: aws eks update-kubeconfig --region $AWS_REGION --name ${{ steps.cluster.outputs.name }}
 
       - name: Install NGINX Ingress Controller
         run: |
@@ -107,7 +104,7 @@ jobs:
         uses: bitovi/github-actions-deploy-eks-helm@v1.2.10
         with:
           aws-region: ${{ env.AWS_REGION }}
-          cluster-name: ${{ env.EKS_CLUSTER }}
+          cluster-name: ${{ steps.cluster.outputs.name }}
           chart-path: helm/vprofilecharts
           namespace: default
           name: vprofile-stack
