@@ -77,7 +77,7 @@ jobs:
         id: cluster
         run: |
           NAME=$(aws eks list-clusters --region $AWS_REGION \
-                   --query "clusters[?starts_with(@, '$EKS_CLUSTER')] | [0]" \
+                   --query "clusters[?starts_with(@, '${EKS_CLUSTER}')] | [0]" \
                    --output text)
           echo "name=$NAME" >> $GITHUB_OUTPUT
 
